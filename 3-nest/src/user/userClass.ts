@@ -1,46 +1,59 @@
 export class user {
 
     private username:string;
-    private fullName: name;
-    private id:number; 
+    private name: string;
+    private id:string; 
     private age: number;
     private email: string;
     private password: string
 
-    constructor(username:string, password:string, age:number, email:string, fullName: name){
+    constructor(username:string, password:string, age:number, email:string, name: string){
         this.username = username;
         this.password = password;   
         this.age = age;
         this.email = email;
-        this.fullName = fullName;
+        this.name = name;
+        // this.id = id;
+
+
+       
+       
     }
 
+
+    
     displayAccountInfo(){
         console.log(`Username: ${this.username}`);
         console.log(`Password: ${this.password}`);
-        console.log("/nAccount Information");
-        console.log(`Full Name: ${this.fullName.lastName}, ${this.fullName.firstName} ${this.fullName.middleName}`);
+        console.log("-------------------------");
+        console.log("Account Information");
+        console.log(`Full Name: ${this.name}`);
         console.log(`Age: ${this.age}`);
         console.log(`email: ${this.email}`);
-        console.log(`ID No: ${this.id}`);
+        console.log("-------------------------");
     }
 
     toJson(){
         return {
             username:this.username,
-            password:this.password,
-            fullName:this.fullName,
+            name:this.name,
             age:this.age,
             email:this.email,
-            id:this.id
+            
         };
     }
 
+    toJson1(message: string){
+        return {
+            message: message
+        };
+    }
+//}
+logIn(email:string, password:string){
+    if(email == this.email && password == this.password)
+    return this.toJson1("Login Succesful");
+    else
+    return this.toJson1("Error, Username or Password not found");
 }
 
-
-export interface name {
-    firstName: string;
-    middleName: string;
-    lastName: string;
 }
