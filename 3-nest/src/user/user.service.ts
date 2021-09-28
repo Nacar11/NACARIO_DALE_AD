@@ -5,9 +5,11 @@ import { user } from 'src/user/userClass';
 
 @Injectable()
 export class UserService {
-    private users: Map<string,user> = new Map<string,user>();
+    private users: Map<number,user> = new Map<number,user>();
 
-
+    constructor(){
+        this.generateDefaultUsers();
+    }
     sampleFunction(){
         var car1:Car
     
@@ -16,107 +18,130 @@ export class UserService {
         
         return car1.toJson();
     }
-
-    getAll(id:string){
-       
-        return this.users.get(id).toJson1("all");       
+    generateDefaultUsers(){
+        this.users.set(1,new user(1,"Nacar",18,"nbrandale@yahoo.com","123456"));
+        this.users.set(2,new user(2,"Bran",19,"nacariodale@gmail.com","asdasd"));
+        this.users.set(3,new user(3,"Dale",19,"bran.nacario@usjr.edu.ph","234234s"));
+        this.users.set(4,new user(4,"Ludo",20,"blankkuhaku@ngnl.com","blinddevotion"));
     }
+
+    getAll(){
+       
+        var list =[];
+        for(const user of this.users.values()){
+            list.push(user.toJson());
+        }
+        return list;
+    }
+
 
     register(newuser:any){
         var newUser: user;
-        newUser = new user(newuser?.username, newuser?.password, newuser?.age, newuser?.email, newuser?.name);
+        newUser = new user(newuser?.id, newuser?.name, newuser?.age, newuser?.email, newuser?.password);
         
         this.users.set(newuser.id, newUser);
-        this.logAllUsers();
-        return newUser.toJson1("Account created");
+        return "Account Created";
     }
 
 
-    logAllUsers(){
-        for(const [key,user] of this.users.entries()){
-          console.log(key);
-            user.displayAccountInfo();
-        }
+//     logAllUsers(){
+//         for(const [key,user] of this.users.entries()){
+//           console.log(key);
+//             user.displayAccountInfo();
+//         }
 
-}
+// }
 
 
     changeUserDetails(id:string, newuser: any){
-        var newUser: user;
+        var newUser: user, tempuser: user;
+        var parsedID = parseInt(id);
+
+        
+       if(this.users.has(parsedID)){
        
-        newUser = new user(newuser?.username, newuser?.password, newuser?.age, newuser?.email, newuser?.name);
-        
-        
-        if (newuser.password == undefined)
-        return newUser.toJson1("Password not defined");
+         newUser = new user(parsedID, newuser?.name, newuser?.age, newuser?.email, newuser?.password);
+         tempuser = this.users.get(parsedID);
+         if(newUser.compare(tempuser)){
+             this.users.set(parsedID, newUser)
+             return `Successfully changed User Details on ID Number ${parsedID}`;
+         }
+         else {
+             return "Error! Must input all necessary Details."
+         }
+       }
+      else {
+          return "Error! ID Number not found.";
+      }
+      }
     
-         else if(newuser.username == undefined)
-         return newUser.toJson1("Username not defined");
 
-        else if(newuser.age == undefined)
-        return newUser.toJson1("Age not defined");
+
     
-        else if(newuser.email == undefined)
-        return newUser.toJson1("Email not defined");
-
-        else if(newuser.name == undefined)
-        return newUser.toJson1("Name not defined");
-
-
-        this.users.set(id, newUser);
-        this.logAllUsers();
-        return newUser.toJson1("Change Succesful");
-    }
 
     
 
     deleteUser(id:string){
-
-        if(this.users.has(id))
-        this.users.delete(id);
-        else console.log("The id "+id+" does not exist in database!");
+        var parsedID = parseInt(id);
+        if(this.users.has(parsedID)){
+        this.users.delete(parsedID);
+        return `Successfully delete User of ID Number ${parsedID}`;
+    }
+        else 
+        return "The id "+id+" does not exist in database!";
       }
 
 
 
 
       getUserid(id:string){
-          if(this.users.has(id))
-            return this.users.get(id).toJson();
+          var parsedID = parseInt(id);
+          if(this.users.has(parsedID))
+            return this.users.get(parsedID).toJson();
       }
 
-      patchUser(id:string, newuser:any){
-        for(const [num,user] of this.users.entries()){
-            if(user['id'] === id){
-                // if(newuser.usename != undefined)
-                    user["username"] = newuser.username;
-                console.log("asdas");
+      patchUser(id:string, newuser: any){
+        var parsedID = parseInt(id);
+        var temp1: user, temp2: user;
+       
+        if(this.users.has(parsedID)){
+            temp1 = this.users.get(parsedID);
+            temp1 = new user (parsedID, newuser?.name, newuser?.age, newuser?.email, newuser?.password); 
 
 
-
-                    
+            temp2 = this.users.get(parsedID);  
+            temp1.patch(temp2);
+            if(temp1.checkTypeOf()){
+                this.users.set(parsedID,temp1);
+                return `Successfully changed User Details of ID ${id}.`;
             }
-
+            else{
+                return `Error, Please input the Appropriate Details!`;
+            }
+            
         }
-        this.logAllUsers();
-        return this.users.get(id).toJson1("Change Successful");
+        else
+            return "Error, ID number not found!";
         
-      }
+    }
       
 
       login(newuser:any){
-          
-          for(const [number,user] of this.users.entries()){
-                
+          var temp1: user;
+          for(const [key,entry] of this.users.entries()){
+              temp1 = entry;
+              if(temp1.checkLoginDetails(newuser)){
+              console.log(key);
+              return `Login Succesful! Welcome, ${this.users.get(key).toJson().name}!`;
              
           }
+          }
 
-      }
-
-
-      getUserSearch(newuser:any){
-        for(const [num,user] of this.users.entries()){
+           
+            return `Error, Incorrect Email or Password!`;
             
-        }
+    
+
       }
+        
 }

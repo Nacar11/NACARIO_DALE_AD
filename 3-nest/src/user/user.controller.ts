@@ -10,9 +10,9 @@ export class UserController {
     }
     
 
-    @Get(`/getUser/all`)
-    getAll(@Param("id") id: string){
-        return this.user.getAll(id);
+    @Get(`/all`)
+    getAll(){
+        return this.user.getAll();
     }
 
 
@@ -25,34 +25,34 @@ export class UserController {
     }
 
 
-    @Put(`changeUserDetails/:id`)
-    changeUserDetails(@Param("id") id:string, @Body() body: any){
+    @Put(`/:id/`)
+    changeUserDetails(@Param(`id`) id:string, @Body() body: any){
         return this.user.changeUserDetails(id,body); 
     }
 
        
 
-    @Get(`/getUser/:id`)
+    @Get(`/:id/`)
     getUserid(@Param("id") id: string){
         return this.user.getUserid(id);
     }
-    @Delete('/deleteUser/:id')
+    @Delete('/:id/')
     deleteuser(@Param("id") id:string) {
       return this.user.deleteUser(id);
     }
 
-   @Patch(`patchUser/:id`)
+   @Patch(`/:id/`)
    patchUser(@Param("id") id:string, @Body() body:any){
        return this.user.patchUser(id,body);
    }
 
-   @Post("/login")
+   @Post(`/login`)
    login(@Body() body:any){
        return this.user.login(body);
    }
 
-   @Get("search/:term")
-   getUserSearch(@Body() body:any){
-       return this.user.getUserSearch(body);
-   }
+//    @Get("search/:term")
+//    getUserSearch(@Body() body:any){
+//        return this.user.getUserSearch(body);
+//    }
     }
