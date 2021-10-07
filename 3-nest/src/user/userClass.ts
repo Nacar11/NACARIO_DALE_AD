@@ -95,7 +95,19 @@ export class user {
         }
     }
 
+    searchDetail(term: string){
+        var name: string = this.name.toUpperCase();
+        var email: string = this.email.toUpperCase();
+        var password: string = this.password.toUpperCase();
+        var passedString: string = term.toUpperCase();
 
+        if(this.id == parseInt(term) || this.age == parseInt(term) || name == passedString || email == passedString || password == passedString){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
 
     
