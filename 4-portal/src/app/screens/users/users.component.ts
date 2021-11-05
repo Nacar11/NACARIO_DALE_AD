@@ -46,7 +46,9 @@ export class UsersComponent implements OnInit {
   handleBackEvent(event:any){
     if(event  == true){
       this.viewedUserIndex = undefined;
+      this.ngOnInit();
     }
+
   }
   viewUserData(i:number) {
    this.viewedUserIndex = i;

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/shared/auth.service';
+import { ApiService } from  'src/app/shared/api.service';
 
 
 @Component({
@@ -11,18 +12,19 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit {
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(private router: Router, private api: ApiService) {}
 
   @Input() user:User|undefined;
   @Output() backEvent = new EventEmitter<boolean>();
 
-  registerForm: FormGroup = new FormGroup({
+  editForm: FormGroup = new FormGroup({
     fcName: new FormControl('', Validators.required),
     fcAge: new FormControl(0, Validators.min(1)),
     fcEmail: new FormControl('', Validators.required),
   });
 
   error: string = '';
+  userID: string ='';
 
   goBack(){
     this.backEvent.emit(true);
@@ -30,7 +32,8 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.user!=undefined){
-      this.registerForm.setValue({
+      this.userID = `${this.user.id}`;
+      this.editForm.setValue({
         fcName:this.user.name,
         fcAge: this.user.age,
         fcEmail:this.user.email
@@ -38,48 +41,35 @@ export class EditComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (
-      this.registerForm.value['fcPassword'] !==
-      this.registerForm.value['fcPassword2']
-    ) {
-      this.error = 'Password doesnt match!';
-      console.log(this.error);
-      return;
-    }
-    if (!this.registerForm.valid) {
+  async onSubmit(userInfo: string) {
+    this.patchUser(userInfo);
+  }
+
+  async patchUser(userInfo: string){
+    var option:boolean = confirm("Confirm Edit of User " + `${this.user?.name}` + "?");
+
+    if (option==true){
+      var result = await this.api.patch(`/user/${userInfo}`,
       {
-        this.error = 'No fields must be empty';
-        console.log(this.error);
-        return;
-      }
-    }
-    if (this.registerForm.valid) {
-      var payload: {
-        name: string;
-        email: string;
-        age: number;
-        password: string;
-      };
-      payload = {
-        name: this.registerForm.value.fcName,
-        age: parseInt(this.registerForm.value.fcAge),
-        email: this.registerForm.value.fcEmail,
-        password: this.registerForm.value.fcPassword,
-      };
-      this.auth.register(payload).then((data) => {
-        console.log(data);
-        if (this.auth.authenticated) {
-          this.nav('home');
-        } else {
-          this.error = data.data;
-          console.log(this.error);
-        }
+        name: this.editForm.value["fcName"] || undefined, 
+        email: this.editForm.value["fcEmail"] || undefined, 
+        age: this.editForm.value["fcAge"] || undefined
       });
-    }
+       alert("Successfully Changed!");
+      }
+      if(result.success){
+        console.log(result.data);
+        this.goBack();
+      }
+
+  
+  
   }
 
   nav(destination: string) {
     this.router.navigate([destination]);
   }
+
+
+  
 }

@@ -3,8 +3,8 @@
     <div *ngIf="viewedUserIndex == undefined">
         <div class="headsearch">
             <div class="webdesigntuts-workshop">
-                <input type="text" placeholder="Search here..." required (change)="getData(searchVal.value)" #searchVal>
-                <button class="clear">Clear</button>
+                <input class="forInput" type="text" placeholder="Search here..." required (change)="getData(searchVal.value)" #searchVal>
+                <button (click)="searchVal.value=''" (click)="ngOnInit();" class="clear">Clear</button>
                 <!-- <button class="clear">Clear</button> -->
             </div>
         </div>

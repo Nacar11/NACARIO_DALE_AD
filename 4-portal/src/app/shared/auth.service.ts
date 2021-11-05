@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../model/user.model';
+import { User } from '../model/user.model'; 
 import { ApiService } from './api.service';
 import { CRUDReturn } from '../model/crud_return.interface';
 @Injectable({
