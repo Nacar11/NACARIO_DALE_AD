@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { ApiService } from 'src/app/shared/api.service';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,33 +12,28 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router, private api: HttpClient) { }
+  constructor(private router: Router, private auth: AuthService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
- fcEmail = new FormControl();
- fcPassword = new FormControl();
- requestResult = '';
-
-  async login(){
-    var result:any = await this.api.post(environment.API_URL+"/user/login",{"email": this.fcEmail.value, "password": this.fcPassword.value}).toPromise();
-    
-    if(result.success){
-      this.nav("home");
+  fcEmail = new FormControl();
+  fcPassword = new FormControl();
+  requestResult = '';
+  error = '';
+  async login() {
+    this.error = '';
+    var result: any = await this.auth.login(
+      this.fcEmail.value,
+      this.fcPassword.value
+    );
+    console.log(result);
+    if (this.auth.authenticated) {
+      this.nav('home');
+    } else {
+      this.error = result.data;
     }
-
-
-
-    // if(this.fcEmail.value == 'nbrandale@yahoo.com' && this.fcPassword.value == 'motherfuckingweb'){
-    //   this.nav('home');
-    // }
-    // else{
-    //   alert('incorrect credentials');
-    // } 
-}
-  nav(destination:string){
+  }
+  nav(destination: string) {
     this.router.navigate([destination]);
   }
-
 }

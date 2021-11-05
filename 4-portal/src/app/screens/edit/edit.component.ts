@@ -1,27 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/shared/auth.service';
 
+
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: 'edit-user',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class EditComponent implements OnInit {
   constructor(private router: Router, private auth: AuthService) {}
+
+  @Input() user:User|undefined;
+  @Output() backEvent = new EventEmitter<boolean>();
 
   registerForm: FormGroup = new FormGroup({
     fcName: new FormControl('', Validators.required),
     fcAge: new FormControl(0, Validators.min(1)),
     fcEmail: new FormControl('', Validators.required),
-    fcPassword: new FormControl('', Validators.required),
-    fcPassword2: new FormControl('', Validators.required),
   });
 
   error: string = '';
 
-  ngOnInit(): void {}
+  goBack(){
+    this.backEvent.emit(true);
+  }
+
+  ngOnInit(): void {
+    if(this.user!=undefined){
+      this.registerForm.setValue({
+        fcName:this.user.name,
+        fcAge: this.user.age,
+        fcEmail:this.user.email
+      });
+    }
+  }
 
   onSubmit() {
     if (

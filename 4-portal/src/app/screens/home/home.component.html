@@ -1,21 +1,37 @@
+<!-- <div class="label"> -->
+<!-- <button (click)="toggleDisplay();getAll()">Toggle Display all Users</button> -->
+
+
+
+<!-- </div>
 <div class="mainContent">
-    <div class="login">
-        <h1 for="EMAIL">List of all Users</h1>
-        <div class="divScroll">
-            <tr *ngFor="let user of users">
-                <label>Name: </label>
-                <td>{{user.name}}</td>
-                <label>Age: </label>
-                <td>{{user.age }}</td>
-                <label>Email: </label>
-                <td>{{user.email}}</td>
-                <label>-------------------------------------------------------</label>
-            </tr>
-        </div>
-        <br>
-        <br>
-        <div class="actions">
-            <button (click)="nav('login')">LOGOUT</button>
-        </div>
+    <div class="innerContent">
+        <label>List of Users</label>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID No.</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users ">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td class="tdage">{{ user.age }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
-</div>
+
+    <div class="logout">
+        <button class="button" (click)="nav('login')">LOGOUT</button>
+    </div>
+</div> -->
+
+
+<app-users></app-users>

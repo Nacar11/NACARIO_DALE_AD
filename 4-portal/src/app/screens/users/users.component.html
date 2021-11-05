@@ -1,0 +1,49 @@
+<div class="userMain">
+
+    <div *ngIf="viewedUserIndex == undefined">
+        <div class="headsearch">
+            <div class="webdesigntuts-workshop">
+                <input type="text" placeholder="Search here..." required (change)="getData(searchVal.value)" #searchVal>
+                <button class="clear">Clear</button>
+                <!-- <button class="clear">Clear</button> -->
+            </div>
+        </div>
+        <table>
+            <!-- <table *ngIf="viewedUserIndex == undefined"> -->
+            <thead>
+                <tr>
+                    <th>
+                        <H3>Users</H3>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Actions</th>
+                </tr>
+                <!-- </thead> -->
+                <tbody>
+                    <tr *ngFor="let user of users; index as i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.age }}</td>
+                        <td>
+                            <fa-icon (click)="deleteUser(i)" [icon]="faTrash"></fa-icon>
+                            <fa-icon (click)="viewUserData(i)" [icon]="faEdit"></fa-icon>
+                        </td>
+                    </tr>
+                </tbody>
+                <div class="reset">
+                    <button (click)="resetDB()">Reset</button>
+                </div>
+        </table>
+    </div>
+    <edit-user *ngIf="viewedUserIndex != undefined" [user]="users[viewedUserIndex]" (backEvent)="handleBackEvent($event)"></edit-user>
+    <!-- <div class="reset">
+        <button (click)="resetDB()">Reset</button>
+    </div> -->
+</div>
